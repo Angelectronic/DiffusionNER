@@ -1,0 +1,178 @@
+[
+    {
+        "tokens": [
+            "Xinhua",
+            "News",
+            "Agency",
+            ",",
+            "Canberra",
+            ",",
+            "August",
+            "31st"
+        ],
+        "entities": [
+            {
+                "type": "ORG",
+                "start": 0,
+                "end": 3
+            },
+            {
+                "type": "GPE",
+                "start": 4,
+                "end": 5
+            }
+        ],
+        "relations": [],
+        "orig_id": "chtb_277.eng",
+        "ltokens": [],
+        "rtokens": [
+            "The",
+            "Chinese",
+            "government",
+            "and",
+            "the",
+            "Australian",
+            "government",
+            "signed",
+            "an",
+            "agreement",
+            "today",
+            ",",
+            "wherein",
+            "the",
+            "Australian",
+            "party",
+            "would",
+            "provide",
+            "China",
+            "with",
+            "a",
+            "preferential",
+            "financial",
+            "loan",
+            "of",
+            "150",
+            "million",
+            "Australian",
+            "dollars",
+            "."
+        ]
+    },
+    {
+        "tokens": [
+            "The",
+            "Chinese",
+            "government",
+            "and",
+            "the",
+            "Australian",
+            "government",
+            "signed",
+            "an",
+            "agreement",
+            "today",
+            ",",
+            "wherein",
+            "the",
+            "Australian",
+            "party",
+            "would",
+            "provide",
+            "China",
+            "with",
+            "a",
+            "preferential",
+            "financial",
+            "loan",
+            "of",
+            "150",
+            "million",
+            "Australian",
+            "dollars",
+            "."
+        ],
+        "entities": [
+            {
+                "type": "GPE",
+                "start": 0,
+                "end": 3
+            },
+            {
+                "type": "GPE",
+                "start": 1,
+                "end": 2
+            },
+            {
+                "type": "GPE",
+                "start": 4,
+                "end": 7
+            },
+            {
+                "type": "GPE",
+                "start": 5,
+                "end": 6
+            },
+            {
+                "type": "GPE",
+                "start": 13,
+                "end": 16
+            },
+            {
+                "type": "GPE",
+                "start": 14,
+                "end": 15
+            },
+            {
+                "type": "GPE",
+                "start": 18,
+                "end": 19
+            },
+            {
+                "type": "GPE",
+                "start": 27,
+                "end": 28
+            }
+        ],
+        "relations": [],
+        "orig_id": "chtb_277.eng",
+        "ltokens": [
+            "Xinhua",
+            "News",
+            "Agency",
+            ",",
+            "Canberra",
+            ",",
+            "August",
+            "31st"
+        ],
+        "rtokens": [
+            "According",
+            "to",
+            "the",
+            "agreement",
+            ",",
+            "this",
+            "loan",
+            "will",
+            "be",
+            "mainly",
+            "used",
+            "in",
+            "infrastructure",
+            "projects",
+            "such",
+            "as",
+            "telecommunications",
+            ",",
+            "municipal",
+            "water",
+            "supplies",
+            "and",
+            "sewage",
+            "treatments",
+            ",",
+            "etc",
+            "."
+        ]
+    }
+]
