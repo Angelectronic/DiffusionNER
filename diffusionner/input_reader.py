@@ -128,6 +128,7 @@ class JsonInputReader(BaseInputReader):
         jtokens = doc['tokens']
         # jrelations = doc['relations']
         jentities = doc['entities']
+        pred_entities = doc['entities_preds']
         if "orig_id" not in doc:
             doc['orig_id'] = doc['org_id']
         orig_id = doc['orig_id']
@@ -146,9 +147,10 @@ class JsonInputReader(BaseInputReader):
         
         # parse entity mentions
         entities = self._parse_entities(jentities, doc_tokens, dataset)
+        pred_entities = self._parse_entities(pred_entities, doc_tokens, dataset)
 
         # create document
-        document = dataset.create_document(doc_tokens, entities, doc_encoding, seg_encoding)
+        document = dataset.create_document(doc_tokens, entities, doc_encoding, seg_encoding, pred_entities)
 
         return document
 

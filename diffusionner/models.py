@@ -677,7 +677,8 @@ class DiffusionNER(PreTrainedModel):
         ts = []
         token_count = token_masks.long().sum(-1,keepdim=True)
         for gt_spans, gt_types, entity_mask, sent_length in zip(entity_spans, entity_types, entity_masks, token_count):
-            gt_num = entity_mask.sum()
+            # gt_num = entity_mask.sum()
+            gt_num = torch.tensor(len(entity_mask))
             target = {}
             gt_spans = gt_spans / sent_length
             gt_spans = span_lr_to_lw(gt_spans)

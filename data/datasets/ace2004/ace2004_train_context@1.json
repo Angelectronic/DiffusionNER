@@ -56,6 +56,32 @@
             "Australian",
             "dollars",
             "."
+        ],
+        "entities_preds": [
+            {
+                "type": "ORG",
+                "start": 0,
+                "end": 3,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "LOC",
+                "start": 4,
+                "end": 5,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "ORG",
+                "start": 0,
+                "end": 3,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 4,
+                "end": 5,
+                "source": "ychenNLP/arabic-ner-ace"
+            }
         ]
     },
     {
@@ -173,6 +199,80 @@
             ",",
             "etc",
             "."
+        ],
+        "entities_preds": [
+            {
+                "type": "ORG",
+                "start": 1,
+                "end": 3,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "ORG",
+                "start": 5,
+                "end": 7,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "ORG",
+                "start": 14,
+                "end": 16,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "GPE",
+                "start": 18,
+                "end": 19,
+                "source": "gliner-community/gliner_small-v2.5"
+            },
+            {
+                "type": "GPE",
+                "start": 1,
+                "end": 2,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 2,
+                "end": 3,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 5,
+                "end": 6,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 6,
+                "end": 7,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 14,
+                "end": 15,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "ORG",
+                "start": 15,
+                "end": 16,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 18,
+                "end": 19,
+                "source": "ychenNLP/arabic-ner-ace"
+            },
+            {
+                "type": "GPE",
+                "start": 27,
+                "end": 28,
+                "source": "ychenNLP/arabic-ner-ace"
+            }
         ]
     }
 ]

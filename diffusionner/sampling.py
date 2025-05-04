@@ -22,11 +22,17 @@ def create_train_sample(doc, repeat_gt_entities = 100):
         gt_entity_types.append(e.entity_type.index)
         gt_entity_masks.append(1)
 
+    for e in doc.pred_entities:
+        gt_entities_spans_token.append(e.span_token)
+        gt_entity_types.append(e.entity_type.index)
+        gt_entity_masks.append(0)
+
+    total_gt_entities = len(gt_entities_spans_token)
 
     if repeat_gt_entities != -1:
-        if len(doc.entities)!=0:
-            k = repeat_gt_entities//len(doc.entities)
-            m = repeat_gt_entities%len(doc.entities)
+        if total_gt_entities!=0:
+            k = repeat_gt_entities//total_gt_entities
+            m = repeat_gt_entities%total_gt_entities
             gt_entities_spans_token = gt_entities_spans_token*k + gt_entities_spans_token[:m]
             gt_entity_types = gt_entity_types*k + gt_entity_types[:m]
             gt_entity_masks = gt_entity_masks*k + gt_entity_masks[:m]
@@ -55,9 +61,7 @@ def create_train_sample(doc, repeat_gt_entities = 100):
         gt_entity_types = torch.zeros([1], dtype=torch.long)
         gt_entity_spans_token = torch.zeros([1, 2], dtype=torch.long)
         gt_entity_masks = torch.zeros([1], dtype=torch.bool)
-    
-    return dict(encodings=encodings, context_masks=context_masks, seg_encoding = seg_encoding, context2token_masks=context2token_masks, token_masks=token_masks, 
-                gt_types=gt_entity_types, gt_spans=gt_entity_spans_token, entity_masks=gt_entity_masks, meta_doc = doc)
+    return dict(encodings=encodings, context_masks=context_masks, seg_encoding = seg_encoding, context2token_masks=context2token_masks, token_masks=token_masks, gt_types=gt_entity_types, gt_spans=gt_entity_spans_token, entity_masks=gt_entity_masks, meta_doc = doc)
 
 
 def create_eval_sample(doc, processor = None):

@@ -34,7 +34,7 @@ class BaseTrainer:
 
         # logging
         # name = str(datetime.datetime.now()).replace(' ', '_') + f'_B{args.train_batch_size}_E{args.epochs}_LR{args.lr}' 
-        name = str(datetime.datetime.now()).replace(' ', '_')
+        name = str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")).replace(' ', '_')
         self._log_path = os.path.join(self.args.log_path, self.args.label, name)
         if self.record:
             util.create_directories_dir(self._log_path)
@@ -149,7 +149,7 @@ class BaseTrainer:
         if isinstance(model, (DataParallel, DistributedDataParallel)):
             model.module.save_pretrained(dir_path)
         else:
-            model.save_pretrained(dir_path)
+            model.save_pretrained(dir_path, safe_serialization=False)
 
         # save vocabulary
         tokenizer.save_pretrained(dir_path)

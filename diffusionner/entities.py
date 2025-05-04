@@ -184,15 +184,20 @@ class Entity:
 
 class Document:
     def __init__(self, doc_id: int, tokens: List[Token], entities: List[Entity],
-                 encoding: List[int], seg_encoding: List[int]):
+                 encoding: List[int], seg_encoding: List[int], pred_entities: List[Entity] = None):
         self._doc_id = doc_id  # ID within the corresponding dataset
 
         self._tokens = tokens
         self._entities = entities
+        self._pred_entities = pred_entities
 
         # byte-pair document encoding including special tokens ([CLS] and [SEP])
         self._encoding = encoding
         self._seg_encoding = seg_encoding
+
+    @property
+    def pred_entities(self):
+        return self._pred_entities
 
     @property
     def doc_id(self):
@@ -304,8 +309,8 @@ class Dataset(TorchDataset):
         self._tid += 1
         return token
 
-    def create_document(self, tokens, entity_mentions, doc_encoding, seg_encoding ) -> Document:
-        document = Document(self._doc_id, tokens, entity_mentions, doc_encoding, seg_encoding)
+    def create_document(self, tokens, entity_mentions, doc_encoding, seg_encoding, pred_entities) -> Document:
+        document = Document(self._doc_id, tokens, entity_mentions, doc_encoding, seg_encoding, pred_entities)
         self._documents[self._doc_id] = document
         self._doc_id += 1
 

@@ -12,7 +12,7 @@ pynvml.nvmlInit()
 
 def process_configs(target, arg_parser):
     args, _ = arg_parser.parse_known_args()
-    ctx = mp.get_context('fork')
+    ctx = mp.get_context('spawn')
 
     subprocess=[]
     if "ALL_GPU" in os.environ:
