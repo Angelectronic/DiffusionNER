@@ -483,7 +483,7 @@ class DiffusionNER(PreTrainedModel):
     def p_sample_loop(self, h_token, h_token_lstm, token_masks):
         batch = token_masks.shape[0]
         shape = (batch, self.num_proposals, 2)
-        span = torch.randn(shape, device=device)
+        span = torch.randn(shape, device=h_token.device)
 
         x_start = None
 
