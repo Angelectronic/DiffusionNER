@@ -149,7 +149,7 @@ class BaseTrainer:
         if isinstance(model, (DataParallel, DistributedDataParallel)):
             model.module.save_pretrained(dir_path)
         else:
-            model.save_pretrained(dir_path, safe_serialization=False)
+            model.save_pretrained(dir_path)
 
         # save vocabulary
         tokenizer.save_pretrained(dir_path)

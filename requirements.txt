@@ -1,5 +1,4 @@
 torch
-gliner
 transformers==4.20.1
 tqdm==4.54.0
 Jinja2==3.0.1
