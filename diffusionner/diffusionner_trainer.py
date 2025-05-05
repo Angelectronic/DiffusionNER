@@ -197,7 +197,7 @@ class DiffusionNERTrainer(BaseTrainer):
                 if args.save_path_include_iteration:
                     self._save_model(self._save_path, model, self._tokenizer, epoch,
                             optimizer=optimizer if args.save_optimizer else None, extra=extra,
-                            include_iteration=args.save_path_include_iteration, name='model')
+                            include_iteration=False, name='model')
                 self._logger.info(f"Best Dev-F1 score: {best_f1}, achieved at Epoch: {best_epoch}, Test-F1: {test_f1}")
 
         # save final model
