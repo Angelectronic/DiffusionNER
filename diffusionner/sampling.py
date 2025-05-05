@@ -64,7 +64,7 @@ def create_train_sample(doc, repeat_gt_entities = 100):
     return dict(encodings=encodings, context_masks=context_masks, seg_encoding = seg_encoding, context2token_masks=context2token_masks, token_masks=token_masks, gt_types=gt_entity_types, gt_spans=gt_entity_spans_token, entity_masks=gt_entity_masks, meta_doc = doc)
 
 
-def create_eval_sample(doc, processor = None):
+def create_eval_sample(doc, processor = None, repeat_gt_entities = 100):
     # if len(doc.encoding) > 512:
     #     return None
     encodings = doc.encoding
@@ -77,6 +77,26 @@ def create_eval_sample(doc, processor = None):
     context2token_masks = []
     for t in doc.tokens:
         context2token_masks.append(create_entity_mask(*t.span, context_size))
+
+    gt_entities_spans_token = []
+    gt_entity_types = []
+    gt_entity_masks = []
+
+    for e in doc.pred_entities:
+        gt_entities_spans_token.append(e.span_token)
+        gt_entity_types.append(e.entity_type.index)
+        gt_entity_masks.append(0)
+
+    total_gt_entities = len(gt_entities_spans_token)
+
+    if repeat_gt_entities != -1:
+        if total_gt_entities!=0:
+            k = repeat_gt_entities//total_gt_entities
+            m = repeat_gt_entities%total_gt_entities
+            gt_entities_spans_token = gt_entities_spans_token*k + gt_entities_spans_token[:m]
+            gt_entity_types = gt_entity_types*k + gt_entity_types[:m]
+            gt_entity_masks = gt_entity_masks*k + gt_entity_masks[:m]
+            assert len(gt_entities_spans_token) == len(gt_entity_types) == len(gt_entity_masks) == repeat_gt_entities
 
     # create tensors
     # token indices
@@ -94,8 +114,16 @@ def create_eval_sample(doc, processor = None):
     # since samples are stacked into batches, "padding" entities/relations possibly must be created
     # these are later masked during loss computation
     context2token_masks = torch.stack(context2token_masks)
-
-    return dict(encodings=encodings, context_masks=context_masks, seg_encoding = seg_encoding, context2token_masks=context2token_masks, token_masks=token_masks, meta_doc = doc)
+    if len(gt_entity_types) > 0:
+        gt_entity_types = torch.tensor(gt_entity_types, dtype=torch.long)
+        # gt_entity_spans_token = torch.tensor(gt_entities_spans_token, dtype=torch.float) / len(doc.tokens)
+        gt_entity_spans_token = torch.tensor(gt_entities_spans_token, dtype=torch.long)
+        gt_entity_masks = torch.tensor(gt_entity_masks, dtype=torch.bool)
+    else:
+        gt_entity_types = torch.zeros([1], dtype=torch.long)
+        gt_entity_spans_token = torch.zeros([1, 2], dtype=torch.long)
+        gt_entity_masks = torch.zeros([1], dtype=torch.bool)
+    return dict(encodings=encodings, context_masks=context_masks, seg_encoding = seg_encoding, context2token_masks=context2token_masks, token_masks=token_masks, meta_doc = doc, gt_types=gt_entity_types, gt_spans=gt_entity_spans_token, entity_masks=gt_entity_masks)
 
 def create_entity_mask(start, end, context_size):
     mask = torch.zeros(context_size, dtype=torch.bool)

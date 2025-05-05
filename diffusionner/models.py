@@ -493,7 +493,7 @@ class DiffusionNER(PreTrainedModel):
         return span
 
     @torch.no_grad()
-    def ddim_sample(self, h_token, h_token_lstm, token_masks, clip_denoised=True):
+    def ddim_sample(self, h_token, h_token_lstm, token_masks, clip_denoised=True, pred_span=None, d_spans=None):
         batch = token_masks.shape[0]
         shape = (batch, self.num_proposals, 2)
         total_timesteps, sampling_timesteps, eta, objective = self.num_timesteps, self.sampling_timesteps, self.ddim_sampling_eta, self.objective
@@ -502,10 +502,13 @@ class DiffusionNER(PreTrainedModel):
         times = list(reversed(times.int().tolist()))
         time_pairs = list(zip(times[:-1], times[1:]))
 
-        if self.sample_dist_type == "normal":
-            span = torch.randn(shape, device=self.device)
-        elif self.sample_dist_type == "uniform":
-            span = (2*torch.rand(shape, device=self.device) - 1) * self.scale
+        if d_spans is not None:
+            span = d_spans
+        else:
+            if self.sample_dist_type == "normal":
+                span = torch.randn(shape, device=self.device)
+            elif self.sample_dist_type == "uniform":
+                span = (2*torch.rand(shape, device=self.device) - 1) * self.scale
 
         x_start = None
         step_ensemble_outputs_class = []
@@ -585,7 +588,8 @@ class DiffusionNER(PreTrainedModel):
 
         # Prepare Proposals.
         if not self.training:
-            results = self.ddim_sample(h_token, h_token_lstm, token_masks)
+            d_spans, noises, t = self.prepare_targets(entity_spans, entity_types, entity_masks, token_masks, meta_doc = meta_doc)
+            results = self.ddim_sample(h_token, h_token_lstm, token_masks, d_spans)
             return results
 
         if self.training:

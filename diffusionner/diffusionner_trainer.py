@@ -363,6 +363,9 @@ class DiffusionNERTrainer(BaseTrainer):
                     seg_encoding = batch['seg_encoding'], 
                     context2token_masks=batch['context2token_masks'], 
                     token_masks=batch['token_masks'],
+                    entity_spans = batch['gt_spans'],
+                    entity_types = batch['gt_types'],
+                    entity_masks = batch['entity_masks'],
                     meta_doc = batch['meta_doc'])
 
                 # evaluate batch

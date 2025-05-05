@@ -331,7 +331,7 @@ class Dataset(TorchDataset):
         if self._mode == Dataset.TRAIN_MODE:
             return sampling.create_train_sample(doc, self._repeat_gt_entities)
         else:
-            return sampling.create_eval_sample(doc)
+            return sampling.create_eval_sample(doc, self._repeat_gt_entities)
 
     def switch_mode(self, mode):
         self._mode = mode
