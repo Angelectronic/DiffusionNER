@@ -143,7 +143,7 @@ class BaseTrainer:
             dir_name = '%s_%s' % (name, iteration) if include_iteration else name
             dir_path = os.path.join(save_path, dir_name)
 
-        util.create_directories_dir(dir_path)
+        # util.create_directories_dir(dir_path)
 
         # save model
         if isinstance(model, (DataParallel, DistributedDataParallel)):

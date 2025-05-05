@@ -193,6 +193,9 @@ class DiffusionNERTrainer(BaseTrainer):
                         test_f1 = test[2]
                     best_epoch = epoch + 1
                     extra = dict(epoch=epoch, updates_epoch=updates_epoch, epoch_iteration=0)
+                    self._save_model(self._save_path, model, self._tokenizer, epoch + 1,
+                            optimizer=optimizer if args.save_optimizer else None, extra=extra,
+                            include_iteration=False, name='best_model')
             if self.record and ((epoch%args.eval_every_epochs)==0 or (epoch == args.epochs - 1)):
                 if args.save_path_include_iteration:
                     self._save_model(self._save_path, model, self._tokenizer, epoch,
