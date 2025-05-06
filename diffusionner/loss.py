@@ -50,16 +50,16 @@ class DiffusionNERLoss(Loss):
         
         train_loss = sum(loss_dict[k] * self.weight_dict[k] for k in loss_dict.keys())
 
-        train_loss.backward()
+        # train_loss.backward()
         # find unused parameters
         # for name, param in (self._model.named_parameters()):
         #     if param.grad is None:
         #         print(name)
-        torch.nn.utils.clip_grad_norm_(self._model.parameters(), self._max_grad_norm)
-        self._optimizer.step()
-        self._scheduler.step()
-        self._model.zero_grad()
-        return train_loss.item()
+        # torch.nn.utils.clip_grad_norm_(self._model.parameters(), self._max_grad_norm)
+        # self._optimizer.step()
+        # self._scheduler.step()
+        # self._model.zero_grad()
+        return train_loss
 
 
 class Criterion(nn.Module):

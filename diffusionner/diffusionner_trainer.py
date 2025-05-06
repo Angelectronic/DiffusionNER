@@ -273,7 +273,10 @@ class DiffusionNERTrainer(BaseTrainer):
 
         iteration = 0
         total = math.ceil(dataset.document_count / (args.train_batch_size * world_size))
-        for batch in tqdm(data_loader, total=total, desc='Train epoch %s' % epoch):
+        
+        optimizer.zero_grad()
+        # for batch in tqdm(data_loader, total=total, desc='Train epoch %s' % epoch):
+        for i, batch in tqdm(enumerate(data_loader), total=total, desc='Train epoch %s' % epoch):
             if epoch == 0 and iteration == 0:
                 for k, v in batch.items():
                     torch.set_printoptions(profile='full')
@@ -309,13 +312,18 @@ class DiffusionNERTrainer(BaseTrainer):
 
             # compute loss and optimize parameters
             batch_loss = compute_loss.compute(outputs, gt_types=batch['gt_types'], gt_spans = batch['gt_spans'], entity_masks=batch['entity_masks'], epoch = epoch, batch = batch)
+            batch_loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
+            if i % args.gradient_accumulation_steps == 0:
+                optimizer.step()
+                optimizer.zero_grad()
             # logging
             iteration += 1
             global_iteration = epoch * updates_epoch + iteration
 
             if global_iteration % args.train_log_iter == 0 and self.local_rank < 1:
-                self._log_train(optimizer, batch_loss, epoch, iteration, global_iteration, dataset.label)
+                self._log_train(optimizer, batch_loss.item(), epoch, iteration, global_iteration, dataset.label)
 
         return iteration
 

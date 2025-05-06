@@ -108,6 +108,7 @@ def train_argparser():
     # Model / Training
     arg_parser.add_argument('--train_batch_size', type=int, default=2, help="Training batch size")
     arg_parser.add_argument('--epochs', type=int, default=20, help="Number of epochs")
+    arg_parser.add_argument('--gradient_accumulation_steps', type=int, default=1)
     arg_parser.add_argument('--lr', type=float, default=5e-5, help="Learning rate")
     arg_parser.add_argument('--lr_warmup', type=float, default=0.1,
                             help="Proportion of total train iterations to warmup in linear increase/decrease schedule")
