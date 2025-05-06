@@ -275,9 +275,8 @@ class DiffusionNERTrainer(BaseTrainer):
         iteration = 0
         total = math.ceil(dataset.document_count / (args.train_batch_size * world_size))
         
-        optimizer.zero_grad()
         for batch in tqdm(data_loader, total=total, desc='Train epoch %s' % epoch):
-            model.set_num_proposals(batch['dynamic_k'].item())
+            model.set_num_proposals(batch['dynamic_k'].item()) if args.dynamic_k else None
             if epoch == 0 and iteration == 0:
                 for k, v in batch.items():
                     torch.set_printoptions(profile='full')
@@ -321,7 +320,7 @@ class DiffusionNERTrainer(BaseTrainer):
                 batch_loss.backward() 
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
-            if iteration % args.gradient_accumulation_steps == 0:
+            if ((iteration + 1) % args.gradient_accumulation_steps == 0) or (iteration == total - 1):
                 optimizer.step()
                 optimizer.zero_grad()
             # logging
