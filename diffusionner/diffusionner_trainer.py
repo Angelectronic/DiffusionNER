@@ -317,7 +317,8 @@ class DiffusionNERTrainer(BaseTrainer):
 
             # compute loss and optimize parameters
             batch_loss = compute_loss.compute(outputs, gt_types=batch['gt_types'], gt_spans = batch['gt_spans'], entity_masks=batch['entity_masks'], epoch = epoch, batch = batch)
-            batch_loss.backward()
+            if isinstance(batch_loss, torch.Tensor):
+                batch_loss.backward() 
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
             if iteration % args.gradient_accumulation_steps == 0:
