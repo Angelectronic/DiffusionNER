@@ -26,7 +26,7 @@ class DiffusionNERLoss(Loss):
         del self._optimizer 
         del self._scheduler
 
-    def compute(self, output, gt_types, gt_spans, entity_masks, epoch, batch = None):
+    def compute(self, output, gt_types, gt_spans, entity_masks, epoch, iteration, gradient_accumulation_steps = 1, len_dataloader = 1, batch = None):
         # set_trace()
 
         gt_types_wo_nil = gt_types.masked_select(entity_masks)
@@ -50,12 +50,18 @@ class DiffusionNERLoss(Loss):
         
         train_loss = sum(loss_dict[k] * self.weight_dict[k] for k in loss_dict.keys())
 
-        # train_loss.backward()
-        # torch.nn.utils.clip_grad_norm_(self._model.parameters(), self._max_grad_norm)
-        # self._optimizer.step()
-        # self._scheduler.step()
-        # self._model.zero_grad()
+        train_loss = train_loss / gradient_accumulation_steps
+        train_loss.backward()
+
+        torch.nn.utils.clip_grad_norm_(self._model.parameters(), self._max_grad_norm)
+
+        if (iteration + 1) % gradient_accumulation_steps == 0 or (iteration + 1) == len_dataloader:
+            self._optimizer.step()
+            self._scheduler.step()
+            self._optimizer.zero_grad()
+
         return train_loss
+
 
 
 class Criterion(nn.Module):
