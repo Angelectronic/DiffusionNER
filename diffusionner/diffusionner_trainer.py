@@ -329,7 +329,7 @@ class DiffusionNERTrainer(BaseTrainer):
             global_iteration = epoch * updates_epoch + iteration
 
             if global_iteration % args.train_log_iter == 0 and self.local_rank < 1:
-                self._log_train(optimizer, batch_loss.item(), epoch, iteration, global_iteration, dataset.label)
+                self._log_train(optimizer, batch_loss.item() if isinstance(batch_loss, torch.Tensor) else batch_loss, epoch, iteration, global_iteration, dataset.label)
 
         return iteration
 
