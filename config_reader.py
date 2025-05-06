@@ -205,7 +205,7 @@ def _yield_configs(arg_parser, args, verbose=True):
                         run_args.tokenizer_path=dirpath
                         run_args.log_path = "/".join(dirpath.split("/")[:-3])
                         run_args.save_code = False
-
+                        run_args.dynamic_k = args_dict["dynamic_k"]
 
                         if run_args.num_proposals == -1:
                             for num_proposals in [5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180]:
