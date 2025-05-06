@@ -58,7 +58,7 @@ class DiffusionNERLoss(Loss):
         if (iteration + 1) % gradient_accumulation_steps == 0 or (iteration + 1) == len_dataloader:
             self._optimizer.step()
             self._scheduler.step()
-            self._optimizer.zero_grad()
+            self._model.zero_grad()
 
         return train_loss
 
