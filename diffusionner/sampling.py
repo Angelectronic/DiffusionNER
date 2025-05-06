@@ -1,6 +1,7 @@
 import torch
 
 from diffusionner import util
+import random
 
 def create_train_sample(doc, repeat_gt_entities = 100):
     encodings = doc.encoding
@@ -130,11 +131,11 @@ def create_entity_mask(start, end, context_size):
     mask[start:end+1] = 1
     return mask
 
-def collate_fn_padding(batch):
+def collate_fn_padding(batch, args):
     batch = list(filter(lambda x: x is not None, batch))
     padded_batch = dict()
     keys = batch[0].keys()
-    
+    number_cut_off_span = random.randint(0, len(batch[0]["gt_spans"])-1) if len(batch[0]["gt_spans"]) > 0 else 0
     for key in keys:
         samples = [s[key] for s in batch]
         if key.startswith("meta"):
@@ -150,6 +151,11 @@ def collate_fn_padding(batch):
         
         if batch[0][key] is None:
             padded_batch[key] = None
+            continue
+        
+        if (key == "gt_spans" or key == "gt_types" or key == "entity_masks") and args.dynamic_k:
+            padded_batch[key] = torch.stack([s[key][:number_cut_off_span] for s in batch])
+            padded_batch["dynamic_k"] = torch.tensor(number_cut_off_span, dtype=torch.int)
             continue
 
         if not batch[0][key].shape:

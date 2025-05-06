@@ -564,6 +564,8 @@ class DiffusionNER(PreTrainedModel):
             "pred_left": torch.cat(step_ensemble_left_entity_token_p, dim = 1), "pred_right": torch.cat(step_ensemble_right_entity_token_p, dim = 1)}
         return output
 
+    def set_num_proposals(self, num_proposals):
+        self.num_proposals = num_proposals
 
     def forward(self, 
             encodings: torch.tensor,

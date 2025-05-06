@@ -20,6 +20,7 @@ from diffusionner.trainer import BaseTrainer
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.optim.lr_scheduler import LambdaLR
+from functools import partial
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -266,7 +267,7 @@ class DiffusionNERTrainer(BaseTrainer):
                 shuffle = False
 
         data_loader = DataLoader(dataset, batch_size=args.train_batch_size, shuffle=shuffle, drop_last=False,
-                                    num_workers=args.sampling_processes, collate_fn=sampling.collate_fn_padding,  sampler=train_sampler)
+                                    num_workers=args.sampling_processes, collate_fn=partial(sampling.collate_fn_padding, args=args), sampler=train_sampler)
                                     
 
         model.zero_grad()
@@ -276,6 +277,7 @@ class DiffusionNERTrainer(BaseTrainer):
         
         optimizer.zero_grad()
         for batch in tqdm(data_loader, total=total, desc='Train epoch %s' % epoch):
+            model.set_num_proposals(batch['dynamic_k'].item())
             if epoch == 0 and iteration == 0:
                 for k, v in batch.items():
                     torch.set_printoptions(profile='full')
@@ -287,11 +289,15 @@ class DiffusionNERTrainer(BaseTrainer):
                             self._logger.info(extended_k)
                             self._logger.info(sub_v[:2].size())
                     else:
-                        if isinstance(v, torch.Tensor) and v[:2].numel()> 5120:
-                            torch.set_printoptions(profile='default')
-                        self._logger.info(k)
-                        # if sum(v.size()[1:]) > 
-                        self._logger.info(v[:2])
+                        if k == 'dynamic_k':
+                            self._logger.info(k)
+                            self._logger.info(v.item())
+                        else:
+                            if isinstance(v, torch.Tensor) and v[:2].numel()> 5120:
+                                torch.set_printoptions(profile='default')
+                            self._logger.info(k)
+                            # if sum(v.size()[1:]) > 
+                            self._logger.info(v[:2])
                 torch.set_printoptions(profile='default')
             model.train()
             batch = util.to_device(batch, self._device)
@@ -352,10 +358,9 @@ class DiffusionNERTrainer(BaseTrainer):
 
 
         if isinstance(dataset, Dataset):
-            data_loader = DataLoader(dataset, batch_size=args.eval_batch_size, shuffle=False, drop_last=False,
-                                 num_workers=args.sampling_processes, collate_fn=sampling.collate_fn_padding, sampler=eval_sampler)
+            data_loader = DataLoader(dataset, batch_size=args.eval_batch_size, shuffle=False, drop_last=False, num_workers=args.sampling_processes, collate_fn=partial(sampling.collate_fn_padding, args=args), sampler=eval_sampler)
         else:
-            data_loader = DataLoader(dataset, batch_size=args.eval_batch_size, drop_last=False, collate_fn=sampling.collate_fn_padding, sampler=eval_sampler)
+            data_loader = DataLoader(dataset, batch_size=args.eval_batch_size, drop_last=False, collate_fn=partial(sampling.collate_fn_padding, args=args), sampler=eval_sampler)
 
         with torch.no_grad():
             model.eval()

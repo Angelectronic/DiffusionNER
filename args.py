@@ -30,7 +30,7 @@ def _add_common_args(arg_parser):
     arg_parser.add_argument('--save_code', action='store_true', default=False)
 
     # Model / Training / Evaluation
-    
+    arg_parser.add_argument('--dynamic_k', default=False, help="Whether to use dynamic k", action='store_true')
     arg_parser.add_argument('--lstm_layers', type=int, default=0, help="")
     arg_parser.add_argument('--span_attn_layers', type=int, default=0, help="")
     arg_parser.add_argument('--wo_self_attn', action='store_true', default=False)
