@@ -320,7 +320,7 @@ class DiffusionNERTrainer(BaseTrainer):
                 batch_loss.backward() 
             torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_grad_norm)
 
-            if ((iteration + 1) % args.gradient_accumulation_steps == 0) or (iteration == total - 1):
+            if ((iteration + 1) % args.gradient_accumulation_steps == 0) or (iteration + 1 == len(data_loader)):
                 optimizer.step()
                 optimizer.zero_grad()
             # logging
