@@ -49,6 +49,7 @@ class DiffusionNERLoss(Loss):
         loss_dict, indices = self.criterion(outputs, targets, epoch, indices = indices)
         
         train_loss = sum(loss_dict[k] * self.weight_dict[k] for k in loss_dict.keys())
+        print("train_loss", train_loss)
 
         # train_loss.backward()
         # find unused parameters

@@ -49,9 +49,9 @@ def process_configs(target, arg_parser):
                     if run_args.world_size>0:
                         gpu_queue.extend([(index, free)])
                     elif (("eval" in run_args.label)):
-                        required_mem = 11000
+                        required_mem = 1000
                     else:
-                        required_mem = 12000
+                        required_mem = 1000
                     cur_free = free
                     for i in range(free//required_mem):
                         gpu_queue.append((index, cur_free))

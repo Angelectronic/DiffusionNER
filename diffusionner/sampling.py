@@ -154,7 +154,18 @@ def collate_fn_padding(batch, args):
             continue
         
         if (key == "gt_spans" or key == "gt_types" or key == "entity_masks") and args.dynamic_k:
-            padded_batch[key] = torch.stack([s[key][:number_cut_off_span] for s in batch])
+            max_len = number_cut_off_span
+            tensors = []
+            for s in batch:
+                data = s[key]
+                if data.shape[0] >= max_len:
+                    data = data[:max_len]
+                else:
+                    pad_len = max_len - data.shape[0]
+                    pad = torch.zeros((pad_len,) + data.shape[1:], dtype=data.dtype, device=data.device)
+                    data = torch.cat([data, pad], dim=0)
+                tensors.append(data)
+            padded_batch[key] = torch.stack(tensors)
             padded_batch["dynamic_k"] = torch.tensor(number_cut_off_span, dtype=torch.int)
             continue
 
