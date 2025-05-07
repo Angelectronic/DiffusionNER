@@ -31,6 +31,7 @@ def _add_common_args(arg_parser):
 
     # Model / Training / Evaluation
     arg_parser.add_argument('--dynamic_k', default=False, help="Whether to use dynamic k", action='store_true')
+    arg_parser.add_argument('--pretrained_boundary', default=False, action='store_true', help="Whether to use boundary predicted by pretrained model, need entities_preds in the dataset")
     arg_parser.add_argument('--lstm_layers', type=int, default=0, help="")
     arg_parser.add_argument('--span_attn_layers', type=int, default=0, help="")
     arg_parser.add_argument('--wo_self_attn', action='store_true', default=False)

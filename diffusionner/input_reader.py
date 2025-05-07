@@ -11,12 +11,14 @@ from transformers import AutoTokenizer
 from diffusionner.entities import Dataset, EntityType, Entity, Document, DistributedIterableDataset
 
 class BaseInputReader(ABC):
-    def __init__(self, types_path: str, tokenizer: AutoTokenizer, logger: Logger = None, repeat_gt_entities = None):
+    def __init__(self, types_path: str, tokenizer: AutoTokenizer, logger: Logger = None, repeat_gt_entities = None, pretrained_boundary = False):
+        
         types = json.load(open(types_path), object_pairs_hook=OrderedDict)  # entity + relation types
 
         self._entity_types = OrderedDict()
         self._idx2entity_type = OrderedDict()
         self._idx2relation_type = OrderedDict()
+        self._pretrained_boundary = pretrained_boundary
 
         # entities
         # add 'None' entity type
@@ -98,8 +100,8 @@ class BaseInputReader(ABC):
 
 
 class JsonInputReader(BaseInputReader):
-    def __init__(self, types_path: str, tokenizer: AutoTokenizer, logger: Logger = None, repeat_gt_entities = None):
-        super().__init__(types_path, tokenizer, logger, repeat_gt_entities)
+    def __init__(self, types_path: str, tokenizer: AutoTokenizer, logger: Logger = None, repeat_gt_entities = None, pretrained_boundary = False):
+        super().__init__(types_path, tokenizer, logger, repeat_gt_entities, pretrained_boundary)
 
         
     def read(self, dataset_paths):
@@ -128,7 +130,7 @@ class JsonInputReader(BaseInputReader):
         jtokens = doc['tokens']
         # jrelations = doc['relations']
         jentities = doc['entities']
-        pred_entities = doc['entities_preds']
+        pred_entities = doc['entities_preds'] if 'entities_preds' in doc and self._pretrained_boundary else None
         if "orig_id" not in doc:
             doc['orig_id'] = doc['org_id']
         orig_id = doc['orig_id']
@@ -192,6 +194,9 @@ class JsonInputReader(BaseInputReader):
 
     def _parse_entities(self, jentities, doc_tokens, dataset) -> List[Entity]:
         entities = []
+
+        if jentities is None:
+            return None
 
         for entity_idx, jentity in enumerate(jentities):
             entity_type = self._entity_types[jentity['type']]

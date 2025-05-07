@@ -23,10 +23,12 @@ def create_train_sample(doc, repeat_gt_entities = 100):
         gt_entity_types.append(e.entity_type.index)
         gt_entity_masks.append(1)
 
-    for e in doc.pred_entities:
-        gt_entities_spans_token.append(e.span_token)
-        gt_entity_types.append(e.entity_type.index)
-        gt_entity_masks.append(0)
+    print("gt_entities_spans_token", doc.pred_entities)
+    if doc.pred_entities is not None:
+        for e in doc.pred_entities:
+            gt_entities_spans_token.append(e.span_token)
+            gt_entity_types.append(e.entity_type.index)
+            gt_entity_masks.append(0)
 
     total_gt_entities = len(gt_entities_spans_token)
 
@@ -83,21 +85,22 @@ def create_eval_sample(doc, processor = None, repeat_gt_entities = 100):
     gt_entity_types = []
     gt_entity_masks = []
 
-    for e in doc.pred_entities:
-        gt_entities_spans_token.append(e.span_token)
-        gt_entity_types.append(e.entity_type.index)
-        gt_entity_masks.append(0)
+    if doc.pred_entities is not None:
+        for e in doc.pred_entities:
+            gt_entities_spans_token.append(e.span_token)
+            gt_entity_types.append(e.entity_type.index)
+            gt_entity_masks.append(0)
 
-    total_gt_entities = len(gt_entities_spans_token)
+        total_gt_entities = len(gt_entities_spans_token)
 
-    if repeat_gt_entities != -1:
-        if total_gt_entities!=0:
-            k = repeat_gt_entities//total_gt_entities
-            m = repeat_gt_entities%total_gt_entities
-            gt_entities_spans_token = gt_entities_spans_token*k + gt_entities_spans_token[:m]
-            gt_entity_types = gt_entity_types*k + gt_entity_types[:m]
-            gt_entity_masks = gt_entity_masks*k + gt_entity_masks[:m]
-            assert len(gt_entities_spans_token) == len(gt_entity_types) == len(gt_entity_masks) == repeat_gt_entities
+        if repeat_gt_entities != -1:
+            if total_gt_entities!=0:
+                k = repeat_gt_entities//total_gt_entities
+                m = repeat_gt_entities%total_gt_entities
+                gt_entities_spans_token = gt_entities_spans_token*k + gt_entities_spans_token[:m]
+                gt_entity_types = gt_entity_types*k + gt_entity_types[:m]
+                gt_entity_masks = gt_entity_masks*k + gt_entity_masks[:m]
+                assert len(gt_entities_spans_token) == len(gt_entity_types) == len(gt_entity_masks) == repeat_gt_entities
 
     # create tensors
     # token indices

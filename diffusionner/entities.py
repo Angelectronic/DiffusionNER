@@ -309,7 +309,7 @@ class Dataset(TorchDataset):
         self._tid += 1
         return token
 
-    def create_document(self, tokens, entity_mentions, doc_encoding, seg_encoding, pred_entities) -> Document:
+    def create_document(self, tokens, entity_mentions, doc_encoding, seg_encoding, pred_entities=None) -> Document:
         document = Document(self._doc_id, tokens, entity_mentions, doc_encoding, seg_encoding, pred_entities)
         self._documents[self._doc_id] = document
         self._doc_id += 1

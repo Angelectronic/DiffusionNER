@@ -11,8 +11,7 @@ warnings.filterwarnings("ignore")
 
 def __train(run_args):
     trainer = DiffusionNERTrainer(run_args)
-    trainer.train(train_path=run_args.train_path, valid_path=run_args.valid_path,
-                  types_path=run_args.types_path, input_reader_cls=input_reader.JsonInputReader)
+    trainer.train(train_path=run_args.train_path, valid_path=run_args.valid_path, types_path=run_args.types_path, input_reader_cls=input_reader.JsonInputReader)
 
 
 def _train():
@@ -22,8 +21,7 @@ def _train():
 
 def __eval(run_args):
     trainer = DiffusionNERTrainer(run_args)
-    trainer.eval(dataset_path=run_args.dataset_path, types_path=run_args.types_path,
-                 input_reader_cls=input_reader.JsonInputReader)
+    trainer.eval(dataset_path=run_args.dataset_path, types_path=run_args.types_path, input_reader_cls=input_reader.JsonInputReader)
 
 
 def _eval():

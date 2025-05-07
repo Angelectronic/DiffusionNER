@@ -118,7 +118,8 @@ class DiffusionNERTrainer(BaseTrainer):
             types_path, 
             self._tokenizer, 
             self._logger,
-            repeat_gt_entities = args.repeat_gt_entities)
+            repeat_gt_entities = args.repeat_gt_entities,
+            pretrained_boundary = args.pretrained_boundary)
         
         dataset_map = {train_label: train_path, valid_label: valid_path}
         if args.eval_test:
@@ -230,7 +231,8 @@ class DiffusionNERTrainer(BaseTrainer):
             types_path, 
             self._tokenizer, 
             self._logger,
-            repeat_gt_entities = args.repeat_gt_entities)
+            repeat_gt_entities = args.repeat_gt_entities,
+            pretrained_boundary = args.pretrained_boundary)
             
         input_reader.read({dataset_label: dataset_path})
         self._log_datasets(input_reader)
